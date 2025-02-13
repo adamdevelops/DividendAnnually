@@ -10,7 +10,7 @@ export default function Home() {
   ]
 
 
-  const renderStocks = example_stocks.map(stock => 
+  const renderStocks = example_stocks.map(stock =>  
     <li className="stock-item" key={stock.id}>           
       <span>{stock.name}</span>
       <span>{stock.shares_owned}</span>
