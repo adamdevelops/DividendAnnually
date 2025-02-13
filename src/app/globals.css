@@ -1,0 +1,19 @@
+.app{
+  text-align: center;
+}
+
+ .menu-item{
+  margin: 0 10px;
+}
+
+.search-area{
+  margin: 10px 0;
+}
+
+.stock-item{
+  list-style-type: none;
+}
+
+.stock-item span{
+  padding: 0 10px;
+}
