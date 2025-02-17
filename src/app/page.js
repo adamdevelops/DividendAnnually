@@ -1,5 +1,6 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import PortfolioTable from "./components/PortfolioTable";
 
 export default function Home() {
 
@@ -10,11 +11,12 @@ export default function Home() {
   ]
 
 
-  const renderStocks = example_stocks.map(stock =>  
+  const renderStocks = example_stocks.map(stock =>
     <li className="stock-item" key={stock.id}>           
       <span>{stock.name}</span>
       <span>{stock.shares_owned}</span>
       <span>{stock.div_yield}</span>
+      <span>{stock.div_yield * stock.shares_owned}</span>
     </li>
   );
 
@@ -39,6 +41,8 @@ export default function Home() {
         <ul>
           {renderStocks}
         </ul>
+
+        <PortfolioTable stocks={example_stocks} />
       </div>
     </div>
   );
