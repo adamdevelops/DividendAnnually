@@ -17,7 +17,6 @@ export default function PortfolioTable({stocks}) {
             <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell>Shares Owned</TableCell>
-                <TableCell>Dividend Yield</TableCell>
                 <TableCell>Annual Dividend</TableCell>
             </TableRow>
             </TableHead>
@@ -26,7 +25,6 @@ export default function PortfolioTable({stocks}) {
                     <TableRow key={stock.id}>
                         <TableCell>{stock.name}</TableCell>
                         <TableCell>{stock.shares_owned}</TableCell>
-                        <TableCell>{stock.div_yield}</TableCell>
                         <TableCell>{stock.div_yield * stock.shares_owned}</TableCell>
                     </TableRow>
                 ))}
