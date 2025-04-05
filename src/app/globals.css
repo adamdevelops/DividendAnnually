@@ -10,6 +10,10 @@
   margin: 10px 0;
 }
 
+.dropdown-area{
+  width: 700px;
+}
+
 .stock-item{
   list-style-type: none;
 }

@@ -17,16 +17,55 @@ export default function Home() {
     {id: 3, name: "SCHD", shares_owned: 1, div_yield: .75},
   ]
 
+  // {
+  //   "results": [
+  //     {
+  //       "ticker": "AAPL",
+  //       "name": "Apple Inc.",
+  //       "market": "stocks",
+  //       "locale": "us",
+  //       "primary_exchange": "XNAS",
+  //       "type": "CS",
+  //       "active": true,
+  //       "currency_name": "usd",
+  //       "cik": "0000320193",
+  //       "composite_figi": "BBG000B9XRY4",
+  //       "share_class_figi": "BBG001S5N8V8",
+  //       "last_updated_utc": "2025-03-21T00:00:00Z"
+  //     }
+  //   ],
+  //   "status": "OK",
+  //   "request_id": "59e8f13abcd5a4e399f172167b223aa7",
+  //   "count": 1
+  // }
+
   const [searchInput, setSearchInput] = useState("");
+  const [stockSearch, setStockSearch] = useState([])
 
   const handleSearchInput = (e) => {
     setSearchInput(e.target.value)
     console.log('searchinput', e.target.value)
   }
 
+  const handleDropdownInput = (e) => {
+    setSearchInput(e.target.value)
+    console.log('searchinput', e.target.value)
+
+    fetchStock();
+  }
+
   const fetchStock = () => {
     let resp = fetchStocks(searchInput).then(
-      data => console.log('data', data)
+      data => {
+        if(data.results.length < 1){
+          
+          console.log('data', data)
+          return
+        }
+        console.log('data', data)
+
+        setStockSearch(data.results)
+      }
     )
   }
 
@@ -57,14 +96,17 @@ export default function Home() {
       </div>
 
       {/* Auto complete feature to search existing portfolio of stocks */}
-      {/* <Autocomplete
+      <Autocomplete
         id="free-solo-2-demo"
-        disableClearable
-        options={example_stocks.map((option) => option.name)}
+        className="dropdown-area"
+        
+        
+        options={stockSearch.map(option => option.name + " - " + option.ticker)}
         renderInput={(params) => (
           <TextField
             {...params}
             label="Search input"
+            onChange={handleSearchInput}
             slotProps={{
               input: {
                 ...params.InputProps,
@@ -73,7 +115,7 @@ export default function Home() {
             }}
           />
         )}
-      /> */}
+      />
 
       <div>
         <h3>My Portfolio</h3>
