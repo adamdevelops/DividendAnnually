@@ -40,7 +40,9 @@ export default function Home() {
   // }
 
   const [searchInput, setSearchInput] = useState("");
-  const [stockSearch, setStockSearch] = useState([])
+  const [stockSearch, setStockSearch] = useState([]);
+  const [dropdownSearchVisibile, setDropdownSearchVisibile] = useState(false);
+  
 
   const handleSearchInput = (e) => {
     setSearchInput(e.target.value)
@@ -65,6 +67,7 @@ export default function Home() {
         console.log('data', data)
 
         setStockSearch(data.results)
+        setDropdownSearchVisibile(true);
       }
     )
   }
@@ -76,6 +79,12 @@ export default function Home() {
       <span>{stock.shares_owned}</span>
       <span>{stock.div_yield}</span>
       <span>{stock.div_yield * stock.shares_owned}</span>
+    </li>
+  );
+
+  const renderSearchStocks = stockSearch.map(stock =>
+    <li className="stock-item" key={stock.id}>           
+      <span>{stock.name}</span>
     </li>
   );
 
@@ -91,15 +100,28 @@ export default function Home() {
       </span>
 
       <div id="search-area" className="search-area">
-        <TextField placeholder="Type in name of stock to add" onChange={handleSearchInput}/>
-        <Button variant="contained" onClick={fetchStock}>Search</Button>
+        <div className="searchbox">
+          <TextField placeholder="Type in stock name" onChange={handleSearchInput}/>
+          
+          <Button variant="contained" className="search-btn" onClick={fetchStock}>Search</Button>
+        </div>
+        
+        {
+          dropdownSearchVisibile &&
+
+          <div id="drop-down-area" className="drop-down-area">
+            {renderSearchStocks}
+            <div className="close-btn" onClick={() => setDropdownSearchVisibile(false)}>Close</div>
+          </div>
+
+        }
       </div>
 
       {/* Auto complete feature to search existing portfolio of stocks */}
+      {/*
       <Autocomplete
         id="free-solo-2-demo"
         className="dropdown-area"
-        
         
         options={stockSearch.map(option => option.name + " - " + option.ticker)}
         renderInput={(params) => (
@@ -116,6 +138,7 @@ export default function Home() {
           />
         )}
       />
+      */}
 
       <div>
         <h3>My Portfolio</h3>

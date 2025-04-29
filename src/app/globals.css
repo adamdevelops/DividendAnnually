@@ -1,5 +1,9 @@
 .app{
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
  .menu-item{
@@ -8,10 +12,32 @@
 
 .search-area{
   margin: 10px 0;
+  width: fit-content;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 
-.dropdown-area{
-  width: 700px;
+.searchbox{
+  height: 56px;
+}
+
+.search-btn{
+  height: inherit;
+}
+
+.drop-down-area{
+  min-height: 50px;
+  border: 1px solid gray;
+  border-radius: 5px;
+  overflow-y: scroll;
+}
+
+.close-btn{
+  margin-top: 10px;
+  padding-right: 4px;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .stock-item{
