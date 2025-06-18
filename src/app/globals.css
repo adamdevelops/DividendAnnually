@@ -31,6 +31,7 @@
   border: 1px solid gray;
   border-radius: 5px;
   overflow-y: scroll;
+  border-top: 0;
 }
 
 .close-btn{
@@ -38,12 +39,40 @@
   padding-right: 4px;
   display: flex;
   justify-content: flex-end;
+  cursor:pointer;
 }
 
-.stock-item{
+.search-stock-item{
   list-style-type: none;
+  padding: 20px 0 ;
+  border-bottom: 1px solid gray;
+  display: flex;
+  flex-direction: row;
 }
 
-.stock-item span{
+.search-stock-item-info{
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+
+.search-stock-item span{
   padding: 0 10px;
+}
+
+.search-stock-item-name{
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+.search-stock-item-ticker{
+
+}
+
+.search-stock-item-btn{
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  width: 50%;
+  padding-right: 20px;
 }

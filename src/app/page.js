@@ -39,6 +39,50 @@ export default function Home() {
   //   "count": 1
   // }
 
+  // example search stocks
+  const example_search = [{
+    "ticker": "A",
+    "name": "Agilent Technologies Inc.",
+    "market": "stocks",
+    "locale": "us",
+    "primary_exchange": "XNYS",
+    "type": "CS",
+    "active": true,
+    "currency_name": "usd",
+    "cik": "0001090872",
+    "composite_figi": "BBG000C2V3D6",
+    "share_class_figi": "BBG001SCTQY4",
+    "last_updated_utc": "2025-05-21T00:00:00Z"
+  },
+  {
+    "ticker": "NVDA",
+    "name": "Nvidia Corp",
+    "market": "stocks",
+    "locale": "us",
+    "primary_exchange": "XNAS",
+    "type": "CS",
+    "active": true,
+    "currency_name": "usd",
+    "cik": "0001045810",
+    "composite_figi": "BBG000BBJQV0",
+    "share_class_figi": "BBG001S5TZJ6",
+    "last_updated_utc": "2025-06-16T00:00:00Z"
+  },
+  {
+    "ticker": "AAPL",
+    "name": "Apple Inc.",
+    "market": "stocks",
+    "locale": "us",
+    "primary_exchange": "XNAS",
+    "type": "CS",
+    "active": true,
+    "currency_name": "usd",
+    "cik": "0000320193",
+    "composite_figi": "BBG000B9XRY4",
+    "share_class_figi": "BBG001S5N8V8",
+    "last_updated_utc": "2025-06-16T00:00:00Z"
+  }]
+
   const [searchInput, setSearchInput] = useState("");
   const [stockSearch, setStockSearch] = useState([]);
   const [dropdownSearchVisibile, setDropdownSearchVisibile] = useState(false);
@@ -82,9 +126,16 @@ export default function Home() {
     </li>
   );
 
-  const renderSearchStocks = stockSearch.map(stock =>
-    <li className="stock-item" key={stock.id}>           
-      <span>{stock.name}</span>
+  const renderSearchStocks = example_search.map(stock =>
+    <li className="search-stock-item" key={stock.id}>
+      <div className="search-stock-item-info">
+        <span className="search-stock-item-name">{stock.name}</span>
+        <span className="search-stock-item-ticker">{stock.ticker}</span>
+      </div>
+      <div className="search-stock-item-btn" onClick={() => setDropdownSearchVisibile(false)}>
+        X
+      </div>
+      
     </li>
   );
 
