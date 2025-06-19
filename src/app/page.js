@@ -98,13 +98,6 @@ export default function Home() {
     console.log('searchinput', input)
   }
 
-  // const handleDropdownInput = (e) => {
-  //   setSearchInput(e.target.value)
-  //   console.log('searchinput', e.target.value)
-
-  //   fetchStock();
-  // }
-
   const addStockToUserStocks = (stock) => {
     setUserStocks(userStocks => userStocks.concat(stock))
   }
@@ -179,29 +172,6 @@ export default function Home() {
 
         }
       </div>
-
-      {/* Auto complete feature to search existing portfolio of stocks */}
-      {/*
-      <Autocomplete
-        id="free-solo-2-demo"
-        className="dropdown-area"
-        
-        options={stockSearch.map(option => option.name + " - " + option.ticker)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Search input"
-            onChange={handleSearchInput}
-            slotProps={{
-              input: {
-                ...params.InputProps,
-                type: 'search',
-              },
-            }}
-          />
-        )}
-      />
-      */}
 
       <div>
         <h3>My Portfolio</h3>
