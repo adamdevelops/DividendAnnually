@@ -4,10 +4,12 @@ import Image from "next/image";
 import React, { useContext, useEffect, useState } from "react";
 import styles from "./page.module.css";
 import PortfolioTable from "./components/PortfolioTable";
+import { fetchStocks } from "./services/stockService";
 import { TextField } from "@mui/material";
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
-import { fetchStocks } from "./services/stockService";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 export default function Home() {
 
@@ -86,18 +88,25 @@ export default function Home() {
   const [searchInput, setSearchInput] = useState("");
   const [stockSearch, setStockSearch] = useState([]);
   const [dropdownSearchVisibile, setDropdownSearchVisibile] = useState(false);
+  const [userStocks, setUserStocks] = useState([])
   
 
   const handleSearchInput = (e) => {
-    setSearchInput(e.target.value)
-    console.log('searchinput', e.target.value)
+    // Capitalize ticker symbols entered to prevent error on fetching stock
+    let input = e.target.value.toUpperCase()
+    setSearchInput(input)
+    console.log('searchinput', input)
   }
 
-  const handleDropdownInput = (e) => {
-    setSearchInput(e.target.value)
-    console.log('searchinput', e.target.value)
+  // const handleDropdownInput = (e) => {
+  //   setSearchInput(e.target.value)
+  //   console.log('searchinput', e.target.value)
 
-    fetchStock();
+  //   fetchStock();
+  // }
+
+  const addStockToUserStocks = (stock) => {
+    setUserStocks(userStocks => userStocks.concat(stock))
   }
 
   const fetchStock = () => {
@@ -126,20 +135,23 @@ export default function Home() {
     </li>
   );
 
-  const renderSearchStocks = example_search.map(stock =>
-    <li className="search-stock-item" key={stock.id}>
-      <div className="search-stock-item-info">
-        <span className="search-stock-item-name">{stock.name}</span>
-        <span className="search-stock-item-ticker">{stock.ticker}</span>
-      </div>
-      <div className="search-stock-item-btn" onClick={() => setDropdownSearchVisibile(false)}>
-        X
-      </div>
-      
-    </li>
+  const renderSearchStocks = stockSearch.map((stock, index) =>
+    <ng-container key={index}>
+      <li className="search-stock-item" >
+        <div className="search-stock-item-info">
+          <span className="search-stock-item-name">{stock.name}</span>
+          <span className="search-stock-item-ticker">{stock.ticker}</span>
+        </div>
+        <div className="search-stock-item-btn" onClick={() => setDropdownSearchVisibile(false)}>
+          <FontAwesomeIcon icon={faPlus} onClick={() => addStockToUserStocks(stock)} />
+        </div>        
+      </li>
+      <hr className="divider" />
+    </ng-container>
+    
   );
 
-
+  console.log('userStocks', userStocks)
   return (
     <div className="app">
       <h1>Div Ann</h1>
