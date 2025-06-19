@@ -39,7 +39,7 @@ export default function Home() {
   //   "status": "OK",
   //   "request_id": "59e8f13abcd5a4e399f172167b223aa7",
   //   "count": 1
-  // }
+  // }   
 
   // example search stocks
   const example_search = [{
