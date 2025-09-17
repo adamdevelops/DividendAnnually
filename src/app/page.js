@@ -87,19 +87,30 @@ export default function Home() {
 
   const [searchInput, setSearchInput] = useState("");
   const [stockSearch, setStockSearch] = useState([]);
-  const [dropdownSearchVisibile, setDropdownSearchVisibile] = useState(false);
-  const [userStocks, setUserStocks] = useState([])
+  const [addStockQty, setAddStockQty] = useState(0);
+  const [dropdownSearchVisible, setDropdownSearchVisible] = useState(false);
+  const [userStocks, setUserStocks] = useState(example_stocks);
+
   
 
   const handleSearchInput = (e) => {
     // Capitalize ticker symbols entered to prevent error on fetching stock
-    let input = e.target.value.toUpperCase()
-    setSearchInput(input)
-    console.log('searchinput', input)
+    console.log('event', e)
+    if(e.target.id == "search"){
+      let input = e.target.value.toUpperCase()
+      setSearchInput(input)
+      console.log('searchinput', input)
+    } else{
+      let input = e.target.value
+      setAddStockQty(input)
+    }
+    
   }
 
   const addStockToUserStocks = (stock) => {
-    setUserStocks(userStocks => userStocks.concat(stock))
+    let newStock = {details: stock, name: stock.ticker, shares_owned: addStockQty, div_yield: 1, previously_owned: false}
+    //Need to look up stocks dividend yield to add to newStock then added to User Stocks
+    setUserStocks(userStocks => userStocks.concat(newStock))
   }
 
   const fetchStock = () => {
@@ -113,14 +124,14 @@ export default function Home() {
         console.log('data', data)
 
         setStockSearch(data.results)
-        setDropdownSearchVisibile(true);
+        setDropdownSearchVisible(true);
       }
     )
   }
 
 
   const renderStocks = example_stocks.map(stock =>
-    <li className="stock-item" key={stock.id}>           
+    <li className="stock-item" key={stock.id}>
       <span>{stock.name}</span>
       <span>{stock.shares_owned}</span>
       <span>{stock.div_yield}</span>
@@ -135,8 +146,12 @@ export default function Home() {
           <span className="search-stock-item-name">{stock.name}</span>
           <span className="search-stock-item-ticker">{stock.ticker}</span>
         </div>
-        <div className="search-stock-item-btn" onClick={() => setDropdownSearchVisibile(false)}>
-          <FontAwesomeIcon icon={faPlus} onClick={() => addStockToUserStocks(stock)} />
+        <div className="search-stock-item-btn" >
+          <TextField id="qtyOfStocks" onChange={handleSearchInput}/>
+          <FontAwesomeIcon icon={faPlus} onClick={() => {
+            addStockToUserStocks(stock)
+            setDropdownSearchVisible(false)
+          }} />
         </div>        
       </li>
       <hr className="divider" />
@@ -157,17 +172,17 @@ export default function Home() {
 
       <div id="search-area" className="search-area">
         <div className="searchbox">
-          <TextField placeholder="Type in stock name" onChange={handleSearchInput}/>
+          <TextField id="search" name="search" placeholder="Type in stock name" onChange={handleSearchInput}/>
           
           <Button variant="contained" className="search-btn" onClick={fetchStock}>Search</Button>
         </div>
         
         {
-          dropdownSearchVisibile &&
+          dropdownSearchVisible &&
 
           <div id="drop-down-area" className="drop-down-area">
             {renderSearchStocks}
-            <div className="close-btn" onClick={() => setDropdownSearchVisibile(false)}>Close</div>
+            <div className="close-btn" onClick={() => setDropdownSearchVisible(false)}>Close</div>
           </div>
 
         }
@@ -176,7 +191,7 @@ export default function Home() {
       <div>
         <h3>My Portfolio</h3>
 
-        <PortfolioTable stocks={example_stocks} />
+        <PortfolioTable stocks={userStocks} />
       </div>
     </div>
   );
