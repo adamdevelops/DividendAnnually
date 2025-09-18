@@ -85,3 +85,11 @@
   color: #1976d2;
   cursor: pointer;
 }
+
+#qtyOfStocks{
+  width: 30px;
+}
+
+.add-btn{
+  margin-left: 10px;
+}

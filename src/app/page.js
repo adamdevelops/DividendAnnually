@@ -148,7 +148,7 @@ export default function Home() {
         </div>
         <div className="search-stock-item-btn" >
           <TextField id="qtyOfStocks" onChange={handleSearchInput}/>
-          <FontAwesomeIcon icon={faPlus} onClick={() => {
+          <FontAwesomeIcon className="add-btn" icon={faPlus} onClick={() => {
             addStockToUserStocks(stock)
             setDropdownSearchVisible(false)
           }} />
