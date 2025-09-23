@@ -4,7 +4,7 @@ import Image from "next/image";
 import React, { useContext, useEffect, useState } from "react";
 import styles from "./page.module.css";
 import PortfolioTable from "./components/PortfolioTable";
-import { fetchStocks } from "./services/stockService";
+import { fetchStocks, fetchStockDiv } from "./services/stockService";
 import { TextField } from "@mui/material";
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -40,6 +40,19 @@ export default function Home() {
   //   "request_id": "59e8f13abcd5a4e399f172167b223aa7",
   //   "count": 1
   // }   
+
+//   {
+//   "cash_amount": 1.68,
+//   "currency": "USD",
+//   "declaration_date": "2025-07-23",
+//   "dividend_type": "CD",
+//   "ex_dividend_date": "2025-08-08",
+//   "frequency": 4,
+//   "id": "E55698ff58e390854a01e6b409d5ff85da843a58fca91816039d547cfc4736961",
+//   "pay_date": "2025-09-10",
+//   "record_date": "2025-08-08",
+//   "ticker": "IBM"
+// }
 
   // example search stocks
   const example_search = [{
@@ -127,6 +140,22 @@ export default function Home() {
         setDropdownSearchVisible(true);
       }
     )
+
+    let resp2 = fetchStockDiv(searchInput).then(
+      data => {
+        if(data.results.length < 1){
+          
+          console.log('stock dividend data', data)
+          return
+        }
+        console.log('stock dividend data', data)
+
+        // grab the cash amount of first result and times by frequency, then set state
+      }
+    )
+
+
+
   }
 
 

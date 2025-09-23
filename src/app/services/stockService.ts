@@ -21,3 +21,22 @@ export async function fetchStocks(stockTicker) {
     
     return data;
   }
+
+export async function fetchStockDiv(stockTicker) {
+    let stockUrl = url + "v3/reference/dividends?ticker=" + stockTicker + "&order=desc&limit=10&sort=ex_dividend_date&apiKey=" + apiKey;
+    const response = await fetch(stockUrl);
+    if (!response.ok) {
+      throw new Error("Failed to fetch posts");
+    }
+
+    let data = await response.json()
+
+    if(data.results.length >= 1){
+      console.log('resp on service', data.results)
+    } else{
+      console.log('Invalid ticker entered')
+    }
+    
+    
+    return data;
+  }
