@@ -108,7 +108,6 @@ export default function Home() {
 
   const handleSearchInput = (e) => {
     // Capitalize ticker symbols entered to prevent error on fetching stock
-    console.log('event', e)
     if(e.target.id == "search"){
       let input = e.target.value.toUpperCase()
       setSearchInput(input)
@@ -121,9 +120,18 @@ export default function Home() {
   }
 
   const addStockToUserStocks = (stock) => {
-    let newStock = {details: stock, name: stock.ticker, shares_owned: addStockQty, div_yield: 1, previously_owned: false}
-    //Need to look up stocks dividend yield to add to newStock then added to User Stocks
-    setUserStocks(userStocks => userStocks.concat(newStock))
+    let newStock = {details: stock, id: null, name: stock.ticker, shares_owned: addStockQty, div_yield: null, previously_owned: false}
+
+    let resp2 = fetchStockDiv(stock.ticker).then(
+      data => {
+        // grab the cash amount of first result and times by frequency, then set state
+        console.log('div data', data.results[0])
+        let stock_div = data.results[0];
+        newStock.div_yield = stock_div.cash_amount * stock_div.frequency;
+        newStock.id = stock_div.id;
+        setUserStocks(userStocks => userStocks.concat(newStock))
+      }
+    )    
   }
 
   const fetchStock = () => {
@@ -140,22 +148,6 @@ export default function Home() {
         setDropdownSearchVisible(true);
       }
     )
-
-    let resp2 = fetchStockDiv(searchInput).then(
-      data => {
-        if(data.results.length < 1){
-          
-          console.log('stock dividend data', data)
-          return
-        }
-        console.log('stock dividend data', data)
-
-        // grab the cash amount of first result and times by frequency, then set state
-      }
-    )
-
-
-
   }
 
 
