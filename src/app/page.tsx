@@ -10,6 +10,8 @@ import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import Stock from './types/Stock'
+
 
 export default function Home() {
 
@@ -102,7 +104,7 @@ export default function Home() {
   const [stockSearch, setStockSearch] = useState([]);
   const [addStockQty, setAddStockQty] = useState(0);
   const [dropdownSearchVisible, setDropdownSearchVisible] = useState(false);
-  const [userStocks, setUserStocks] = useState(example_stocks);
+  const [userStocks, setUserStocks] = useState([]);
 
   
 
@@ -119,15 +121,16 @@ export default function Home() {
     
   }
 
-  const addStockToUserStocks = (stock) => {
-    let newStock = {details: stock, id: null, name: stock.ticker, shares_owned: addStockQty, div_yield: null, previously_owned: false}
+  const addStockToUserStocks = (stock: any) => {
+    let newStock: Stock = {details: stock, id: null, name: stock.ticker, shares_owned: addStockQty, div_yield: null, previously_owned: false}
 
     let resp2 = fetchStockDiv(stock.ticker).then(
       data => {
         // grab the cash amount of first result and times by frequency, then set state
         console.log('div data', data.results[0])
         let stock_div = data.results[0];
-        newStock.div_yield = stock_div.cash_amount * stock_div.frequency;
+        console.log(stock_div.cash_amount)
+        newStock.div_yield = (stock_div.cash_amount * stock_div.frequency).toFixed(2);
         newStock.id = stock_div.id;
         setUserStocks(userStocks => userStocks.concat(newStock))
       }

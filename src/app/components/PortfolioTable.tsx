@@ -25,7 +25,7 @@ export default function PortfolioTable({stocks}) {
                     <TableRow key={stock.id}>
                         <TableCell>{stock.name}</TableCell>
                         <TableCell>{stock.shares_owned}</TableCell>
-                        <TableCell>{stock.div_yield * stock.shares_owned}</TableCell>
+                        <TableCell>{(stock.div_yield * stock.shares_owned).toFixed(2)}</TableCell>
                     </TableRow>
                 ))}
         </TableBody>
