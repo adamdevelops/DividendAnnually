@@ -104,6 +104,9 @@ export default function Home() {
   const [stockSearch, setStockSearch] = useState([]);
   const [addStockQty, setAddStockQty] = useState(0);
   const [dropdownSearchVisible, setDropdownSearchVisible] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [modalAction, setModalAction] = useState("");
+  const [modalContent, setModalContent] = useState("");
   const [userStocks, setUserStocks] = useState([]);
 
   
@@ -117,9 +120,22 @@ export default function Home() {
     } else{
       let input = e.target.value
       setAddStockQty(input)
-    }
-    
+    }    
   }
+
+  const handleModalOpen = (actionType: string) => {
+    setModalAction(actionType)
+    if(actionType == "Edit"){
+      setModalContent("How many shares owned would like to modify for?")
+    } else{
+      setModalContent("Are you sure you want to delete this stock?")
+    }
+    setOpenModal(true);
+  };
+
+  const handleModalClose = () => {
+    setOpenModal(false);
+  };
 
   const addStockToUserStocks = (stock: any) => {
     let newStock: Stock = {details: stock, id: null, name: stock.ticker, shares_owned: addStockQty, div_yield: null, previously_owned: false}
@@ -176,12 +192,27 @@ export default function Home() {
             addStockToUserStocks(stock)
             setDropdownSearchVisible(false)
           }} />
-        </div>        
+        </div>
       </li>
       <hr className="divider" />
     </ng-container>
     
   );
+
+  const modifySharesOwned = () => {
+
+  }
+
+  const editSelectedStock = (editedStockId: string) => {
+
+  }
+
+  const deleteSelectedStock = (deletedStockId: string) => {
+    let updatedStocks = userStocks.filter(stock => stock.id != deletedStockId)
+    console.log(updatedStocks)
+
+    setUserStocks(updatedStocks)
+  }
 
   console.log('userStocks', userStocks)
   return (
@@ -215,7 +246,7 @@ export default function Home() {
       <div>
         <h3>My Portfolio</h3>
 
-        <PortfolioTable stocks={userStocks} />
+        <PortfolioTable stocks={userStocks} handleModalOpen={handleModalOpen} editStock={editSelectedStock} deleteStock={deleteSelectedStock} />
       </div>
     </div>
   );
