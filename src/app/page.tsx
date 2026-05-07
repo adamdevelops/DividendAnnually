@@ -8,97 +8,69 @@ import { fetchStocks, fetchStockDiv } from "./services/stockService";
 import { TextField } from "@mui/material";
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import Stock from './types/Stock'
+import { Stock } from './types/Stock'
+
+
+export interface SimpleDialogProps {
+  open: boolean;
+  actionType: string;
+  modalContent: string;
+  selectedStock: Stock;
+  onClose: (value: string) => void;
+  onCancel: () => void;
+}
+
+function SimpleDialog(props: SimpleDialogProps) {
+  const { onClose, onCancel, actionType, modalContent, selectedStock, open } = props;
+
+  const handleClose = () => {
+    console.log('selectedStock.id', selectedStock.id)
+    onClose(selectedStock.id);
+  };
+
+  const cancel = () => {
+    onCancel();
+  }
+
+
+  return (
+    <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        role="alertdialog"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {actionType + " Stock"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {modalContent}
+          </DialogContentText>
+          <DialogContentText id="alert-dialog-description">
+            <b>Stock: {selectedStock.name}</b>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} autoFocus>
+            {actionType}
+          </Button>
+          <Button onClick={cancel}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
+  );
+}
 
 
 export default function Home() {
-
-  const example_stocks = [
-    {id: 1, name: "VOO", shares_owned: 4, div_yield: .20},
-    {id: 2, name: "APPL", shares_owned: 2, div_yield: .50},
-    {id: 3, name: "SCHD", shares_owned: 1, div_yield: .75},
-  ]
-
-  // {
-  //   "results": [
-  //     {
-  //       "ticker": "AAPL",
-  //       "name": "Apple Inc.",
-  //       "market": "stocks",
-  //       "locale": "us",
-  //       "primary_exchange": "XNAS",
-  //       "type": "CS",
-  //       "active": true,
-  //       "currency_name": "usd",
-  //       "cik": "0000320193",
-  //       "composite_figi": "BBG000B9XRY4",
-  //       "share_class_figi": "BBG001S5N8V8",
-  //       "last_updated_utc": "2025-03-21T00:00:00Z"
-  //     }
-  //   ],
-  //   "status": "OK",
-  //   "request_id": "59e8f13abcd5a4e399f172167b223aa7",
-  //   "count": 1
-  // }   
-
-//   {
-//   "cash_amount": 1.68,
-//   "currency": "USD",
-//   "declaration_date": "2025-07-23",
-//   "dividend_type": "CD",
-//   "ex_dividend_date": "2025-08-08",
-//   "frequency": 4,
-//   "id": "E55698ff58e390854a01e6b409d5ff85da843a58fca91816039d547cfc4736961",
-//   "pay_date": "2025-09-10",
-//   "record_date": "2025-08-08",
-//   "ticker": "IBM"
-// }
-
-  // example search stocks
-  const example_search = [{
-    "ticker": "A",
-    "name": "Agilent Technologies Inc.",
-    "market": "stocks",
-    "locale": "us",
-    "primary_exchange": "XNYS",
-    "type": "CS",
-    "active": true,
-    "currency_name": "usd",
-    "cik": "0001090872",
-    "composite_figi": "BBG000C2V3D6",
-    "share_class_figi": "BBG001SCTQY4",
-    "last_updated_utc": "2025-05-21T00:00:00Z"
-  },
-  {
-    "ticker": "NVDA",
-    "name": "Nvidia Corp",
-    "market": "stocks",
-    "locale": "us",
-    "primary_exchange": "XNAS",
-    "type": "CS",
-    "active": true,
-    "currency_name": "usd",
-    "cik": "0001045810",
-    "composite_figi": "BBG000BBJQV0",
-    "share_class_figi": "BBG001S5TZJ6",
-    "last_updated_utc": "2025-06-16T00:00:00Z"
-  },
-  {
-    "ticker": "AAPL",
-    "name": "Apple Inc.",
-    "market": "stocks",
-    "locale": "us",
-    "primary_exchange": "XNAS",
-    "type": "CS",
-    "active": true,
-    "currency_name": "usd",
-    "cik": "0000320193",
-    "composite_figi": "BBG000B9XRY4",
-    "share_class_figi": "BBG001S5N8V8",
-    "last_updated_utc": "2025-06-16T00:00:00Z"
-  }]
 
   const [searchInput, setSearchInput] = useState("");
   const [stockSearch, setStockSearch] = useState([]);
@@ -107,6 +79,7 @@ export default function Home() {
   const [openModal, setOpenModal] = useState(false);
   const [modalAction, setModalAction] = useState("");
   const [modalContent, setModalContent] = useState("");
+  const [selectedStock, setSelectedStock] = useState({});
   const [userStocks, setUserStocks] = useState([]);
 
   
@@ -123,8 +96,9 @@ export default function Home() {
     }    
   }
 
-  const handleModalOpen = (actionType: string) => {
+  const handleModalOpen = (actionType: string, stock: Stock) => {
     setModalAction(actionType)
+    setSelectedStock(stock)
     if(actionType == "Edit"){
       setModalContent("How many shares owned would like to modify for?")
     } else{
@@ -133,9 +107,14 @@ export default function Home() {
     setOpenModal(true);
   };
 
-  const handleModalClose = () => {
+  const handleModalClose = (stockId: string) => {
     setOpenModal(false);
+    deleteSelectedStock(stockId);
   };
+
+  const handleCancel = () => {
+    setOpenModal(false);
+  }
 
   const addStockToUserStocks = (stock: any) => {
     let newStock: Stock = {details: stock, id: null, name: stock.ticker, shares_owned: addStockQty, div_yield: null, previously_owned: false}
@@ -168,16 +147,6 @@ export default function Home() {
       }
     )
   }
-
-
-  const renderStocks = example_stocks.map(stock =>
-    <li className="stock-item" key={stock.id}>
-      <span>{stock.name}</span>
-      <span>{stock.shares_owned}</span>
-      <span>{stock.div_yield}</span>
-      <span>{stock.div_yield * stock.shares_owned}</span>
-    </li>
-  );
 
   const renderSearchStocks = stockSearch.map((stock, index) =>
     <ng-container key={index}>
@@ -247,7 +216,16 @@ export default function Home() {
         <h3>My Portfolio</h3>
 
         <PortfolioTable stocks={userStocks} handleModalOpen={handleModalOpen} editStock={editSelectedStock} deleteStock={deleteSelectedStock} />
+        <SimpleDialog
+          selectedStock={selectedStock}
+          open={openModal}
+          onClose={handleModalClose} 
+          onCancel={handleCancel}
+          actionType={modalAction} 
+          modalContent={modalContent}        
+        />
       </div>
     </div>
   );
 }
+

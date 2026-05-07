@@ -13,12 +13,13 @@ import { Stock } from "../types/Stock";
 
 type ChildProps = {
     stocks: Stock[];
-    modifyMode: boolean;
-    handleModalOpen: (actionType: string) => void;
+    // modifyMode: boolean;
+    handleModalOpen: (actionType: string, stock: Stock) => void;
+    editStock: (editedStockId: string) => void;
     deleteStock: (deletedStockId: string) => void;
 }
 
-export default function PortfolioTable({stocks, deleteStock}: ChildProps) {
+export default function PortfolioTable({stocks, handleModalOpen, deleteStock}: ChildProps) {
     return(
     <TableContainer component={Paper}>
         <Table sx={{ maxWidth: 300, margin: "auto", mt: 3 }} aria-label="portfolio table">
@@ -36,7 +37,7 @@ export default function PortfolioTable({stocks, deleteStock}: ChildProps) {
                         <TableCell>{stock.name}</TableCell>
                         <TableCell>{stock.shares_owned}</TableCell>
                         <TableCell>{(stock.div_yield * stock.shares_owned).toFixed(2)}</TableCell>
-                        <TableCell><button onClick={() => handleModalOpen("Edit")}>Edit</button><button onClick={() => deleteStock(stock.id)}><i className="fa-solid fa-trash"></i>Delete</button></TableCell>
+                        <TableCell><button onClick={() => handleModalOpen("Edit", stock)}>Edit</button><button onClick={() => handleModalOpen("Delete", stock)}><i className="fa-solid fa-trash"></i>Delete</button></TableCell>
                     </TableRow>
                 ))}
         </TableBody>
