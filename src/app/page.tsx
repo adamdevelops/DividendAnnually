@@ -23,16 +23,19 @@ export interface SimpleDialogProps {
   actionType: string;
   modalContent: string;
   selectedStock: Stock;
-  onClose: (value: string) => void;
+  onClose: (value: string, action: string, shares: number) => void;
   onCancel: () => void;
 }
 
 function SimpleDialog(props: SimpleDialogProps) {
   const { onClose, onCancel, actionType, modalContent, selectedStock, open } = props;
 
+  const [inputValue, setInputValue] = useState(0);
+
   const handleClose = () => {
     console.log('selectedStock.id', selectedStock.id)
-    onClose(selectedStock.id);
+    console.log('sharesowned', inputValue)
+    onClose(selectedStock.id, actionType, inputValue);
   };
 
   const cancel = () => {
@@ -55,8 +58,10 @@ function SimpleDialog(props: SimpleDialogProps) {
           <DialogContentText id="alert-dialog-description">
             {modalContent}
           </DialogContentText>
-          <DialogContentText id="alert-dialog-description">
-            <b>Stock: {selectedStock.name}</b>
+          <DialogContentText id="alert-dialog-description" component="div">
+            <b>Stock: {selectedStock.name}</b>  
+            <br></br>
+            {actionType === "Edit" && <span><TextField onChange={(e) => setInputValue(e.target.value)} defaultValue={selectedStock.shares_owned}></TextField></span>}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -107,9 +112,15 @@ export default function Home() {
     setOpenModal(true);
   };
 
-  const handleModalClose = (stockId: string) => {
+  const handleModalClose = (stockId: string, actionType: string, shares: number) => {
     setOpenModal(false);
-    deleteSelectedStock(stockId);
+
+    if(actionType === "Edit"){
+      editSelectedStock(stockId, shares)
+    } else{
+      deleteSelectedStock(stockId);
+    }
+    
   };
 
   const handleCancel = () => {
@@ -149,7 +160,7 @@ export default function Home() {
   }
 
   const renderSearchStocks = stockSearch.map((stock, index) =>
-    <ng-container key={index}>
+    <React.Fragment key={index}>
       <li className="search-stock-item" >
         <div className="search-stock-item-info">
           <span className="search-stock-item-name">{stock.name}</span>
@@ -164,7 +175,7 @@ export default function Home() {
         </div>
       </li>
       <hr className="divider" />
-    </ng-container>
+    </React.Fragment>
     
   );
 
@@ -172,8 +183,16 @@ export default function Home() {
 
   }
 
-  const editSelectedStock = (editedStockId: string) => {
+  const editSelectedStock = (editedStockId: string, shares: number) => {
+    // let updatedStock = userStocks.map(stock => 
+    //     stock.id === editedStockId ? { ...stock, shares_owned: shares} : stock
+    //   )
 
+      setUserStocks( userStocks =>
+        userStocks.map(stock => 
+          stock.id === editedStockId ? { ...stock, shares_owned: shares} : stock
+        )
+      )
   }
 
   const deleteSelectedStock = (deletedStockId: string) => {
