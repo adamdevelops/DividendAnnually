@@ -184,10 +184,6 @@ export default function Home() {
   }
 
   const editSelectedStock = (editedStockId: string, shares: number) => {
-    // let updatedStock = userStocks.map(stock => 
-    //     stock.id === editedStockId ? { ...stock, shares_owned: shares} : stock
-    //   )
-
       setUserStocks( userStocks =>
         userStocks.map(stock => 
           stock.id === editedStockId ? { ...stock, shares_owned: shares} : stock
