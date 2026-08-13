@@ -60,8 +60,7 @@ function SimpleDialog(props: SimpleDialogProps) {
           </DialogContentText>
           <DialogContentText id="alert-dialog-description" component="div">
             <b>Stock: {selectedStock.name}</b>  
-            <br></br>
-            {actionType === "Edit" && <span><TextField onChange={(e) => setInputValue(e.target.value)} defaultValue={selectedStock.shares_owned}></TextField></span>}
+            {actionType === "Edit" && <div className="modal-input"><TextField onChange={(e) => setInputValue(e.target.value)} defaultValue={selectedStock.shares_owned}></TextField></div>}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
