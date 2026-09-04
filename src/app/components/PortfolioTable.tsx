@@ -7,19 +7,21 @@ import {
   TableHead,
   TableRow,
   Paper,
+  TableFooter,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Stock } from "../types/Stock";
 
 type ChildProps = {
     stocks: Stock[];
+    totalPortfolioDiv: number;
     // modifyMode: boolean;
     handleModalOpen: (actionType: string, stock: Stock) => void;
     editStock: (editedStockId: string) => void;
     deleteStock: (deletedStockId: string) => void;
 }
 
-export default function PortfolioTable({stocks, handleModalOpen, deleteStock}: ChildProps) {
+export default function PortfolioTable({stocks, totalPortfolioDiv, handleModalOpen, deleteStock}: ChildProps) {
     return(
     <TableContainer component={Paper}>
         <Table sx={{ maxWidth: 300, margin: "auto", mt: 3 }} aria-label="portfolio table">
@@ -34,13 +36,20 @@ export default function PortfolioTable({stocks, handleModalOpen, deleteStock}: C
             <TableBody>
                 {stocks.map((stock) => (
                     <TableRow key={stock.id}>
-                        <TableCell>{stock.name}</TableCell>
+                        <TableCell>{stock.ticker}</TableCell>
                         <TableCell>{stock.shares_owned}</TableCell>
                         <TableCell>{(stock.div_yield * stock.shares_owned).toFixed(2)}</TableCell>
                         <TableCell><button onClick={() => handleModalOpen("Edit", stock)}>Edit</button><button onClick={() => handleModalOpen("Delete", stock)}><i className="fa-solid fa-trash"></i>Delete</button></TableCell>
                     </TableRow>
                 ))}
-        </TableBody>
+            </TableBody>
+            <TableFooter>
+                <TableRow>
+                    <TableCell>Total:</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell>{totalPortfolioDiv}</TableCell>
+                </TableRow>
+            </TableFooter>
         </Table>
     </TableContainer>
     )

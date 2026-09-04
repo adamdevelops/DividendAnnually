@@ -1,6 +1,6 @@
 export interface Stock {
   id: string, 
-  name: string, 
+  ticker: string, 
   shares_owned: number, 
   div_yield: number, 
   previously_owned: boolean,

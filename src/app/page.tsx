@@ -85,6 +85,18 @@ export default function Home() {
   const [modalContent, setModalContent] = useState("");
   const [selectedStock, setSelectedStock] = useState({});
   const [userStocks, setUserStocks] = useState([]);
+  const [totalPortfolioDiv, setTotalPortfolioDiv] = useState(0);
+  const [totalPortfolioDivStocks, setTotalPortfolioDivStocks] = useState([]);
+
+  useEffect(() => {
+    // 🚀 This code runs exactly ONCE when the component mounts
+    console.log("Component initialized!");
+
+    calculateTotalDiv()
+
+    // Optional: Return a cleanup function if needed (e.g., clearing timers)
+    return () => console.log("Component unmounted");
+  }, [userStocks]);
 
   
 
@@ -127,17 +139,18 @@ export default function Home() {
   }
 
   const addStockToUserStocks = (stock: any) => {
-    let newStock: Stock = {details: stock, id: null, name: stock.ticker, shares_owned: addStockQty, div_yield: null, previously_owned: false}
+    let newStock: Stock = {details: stock, id: null, ticker: stock.ticker, shares_owned: addStockQty, div_yield: 0, previously_owned: false}
 
     let resp2 = fetchStockDiv(stock.ticker).then(
       data => {
         // grab the cash amount of first result and times by frequency, then set state
         console.log('div data', data.results[0])
         let stock_div = data.results[0];
-        console.log(stock_div.cash_amount)
-        newStock.div_yield = (stock_div.cash_amount * stock_div.frequency).toFixed(2);
+        let stockDivCash = Number(stock_div.cash_amount)
+        newStock.div_yield = +(stockDivCash * stock_div.frequency).toFixed(2);
         newStock.id = stock_div.id;
         setUserStocks(userStocks => userStocks.concat(newStock))
+        
       }
     )    
   }
@@ -156,6 +169,35 @@ export default function Home() {
         setDropdownSearchVisible(true);
       }
     )
+  }
+
+  const calculateTotalDiv = () => {
+
+    const calculatedTotal = userStocks.reduce((accumulator, currentItem) => {
+      let stockDiv = +(currentItem.div_yield * currentItem.shares_owned).toFixed(2)
+      console.log('currentItem.div_yield', typeof(currentItem.div_yield))
+      console.log('currentItem.shares_owned', typeof(currentItem.shares_owned))
+      let sum = accumulator + stockDiv
+      console.log('sum', typeof(sum))
+      return sum
+    }, 0);
+
+    console.log('total dividends calcualted', calculatedTotal)
+
+
+    setTotalPortfolioDiv(calculatedTotal)
+
+    // Keep track of stocks already calculated for total dividend 
+    const stockList = userStocks.map(item => {
+        return {
+          id: item.id,
+          ticker: item.ticker
+        };
+      })
+
+    console.log('stockList', stockList)
+
+    setTotalPortfolioDivStocks(stockList)    
   }
 
   const renderSearchStocks = stockSearch.map((stock, index) =>
@@ -229,7 +271,7 @@ export default function Home() {
       <div>
         <h3>My Portfolio</h3>
 
-        <PortfolioTable stocks={userStocks} handleModalOpen={handleModalOpen} editStock={editSelectedStock} deleteStock={deleteSelectedStock} />
+        <PortfolioTable stocks={userStocks} totalPortfolioDiv={totalPortfolioDiv} handleModalOpen={handleModalOpen} editStock={editSelectedStock} deleteStock={deleteSelectedStock} />
         <SimpleDialog
           selectedStock={selectedStock}
           open={openModal}
